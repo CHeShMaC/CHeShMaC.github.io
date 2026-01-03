@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">چشمک | رمزنگاری مدرن</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        /* Dark Theme (Default) */
+        :root {
+            --bg-color: #111827;
+            --surface-color: #1f2937;
+            --text-main: #f3f4f6;
+            --text-light: #9ca3af;
+            --electro-blue: #3b82f6;
+            --electro-hover: #2563eb;
+            --input-bg: #374151;
+            --input-border: #4b5563;
+            --border-radius: 16px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --toast-bg: #374151;
+            --toast-text: #ffffff;
+        }
+
+        /* Light Theme Override */
+        [data-theme="light"] {
+            --bg-color: #f3f4f6;
+            --surface-color: #ffffff;
+            --text-main: #374151;
+            --text-light: #9ca3af;
+            --electro-blue: #2563eb;
+            --electro-hover: #1d4ed8;
+            --input-bg: #f9fafb;
+            --input-border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --toast-bg: #1f2937;
+            --toast-text: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Vazirmatn', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Header Layout */
+        header {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 30px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            min-height: 50px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--electro-blue);
+            margin: 0;
+            letter-spacing: -1px;
+            z-index: 1;
+        }
+
+        /* Header Buttons Positioning */
+        .header-btn {
+            position: absolute;
+            background: var(--surface-color);
+            border: 1px solid var(--input-border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+            text-decoration: none; /* For <a> tags */
+        }
+
+        .header-btn:hover {
+            border-color: var(--electro-blue);
+            color: var(--electro-blue);
+        }
+
+        /* Physical Left and Right positioning regardless of RTL/LTR */
+        .theme-toggle-btn {
+            left: 0;
+        }
+
+        /* GitHub Button Styling */
+        .github-btn {
+            left: 50px; /* Placed next to the theme button */
+        }
+
+        .lang-toggle-btn {
+            right: 0;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Layout */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .box {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 500;
+        }
+
+        /* Inputs */
+        textarea, input {
+            width: 100%;
+            border: 2px solid var(--input-border);
+            background: var(--input-bg);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1rem;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            resize: none;
+        }
+
+        textarea:focus, input:focus {
+            border-color: var(--electro-blue);
+            background: var(--surface-color);
+        }
+
+        textarea {
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        /* Action Bar within inputs */
+        .action-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 5px;
+            border-radius: 8px;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            color: var(--electro-blue);
+            background-color: rgba(37, 99, 235, 0.1);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .btn-small {
+            font-size: 0.8rem;
+            padding: 6px 12px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--electro-blue);
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .btn-small:hover {
+            background: rgba(37, 99, 235, 0.2);
+        }
+
+        /* Key Section Specifics */
+        .key-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .key-input {
+            text-align: center;
+            font-family: monospace;
+            font-weight: bold;
+            letter-spacing: 1px;
+            direction: ltr; /* Keys are usually Latin/Numbers */
+        }
+
+        /* Convert Section */
+        .convert-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: -10px 0;
+            z-index: 10;
+        }
+
+        .convert-btn-circle {
+            background: var(--electro-blue);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border: 4px solid var(--bg-color);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, border-color 0.3s ease;
+        }
+
+        .convert-btn-circle:active {
+            transform: scale(0.95);
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--toast-bg);
+            color: var(--toast-text);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+
+        .show-toast {
+            opacity: 1 !important;
+        }
+
+        /* Selection highlight color */
+        ::selection {
+            background: rgba(37, 99, 235, 0.3);
+            color: var(--text-main);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="header-btn theme-toggle-btn" onclick="toggleTheme()" id="themeBtn" title="تغییر تم">
+            <svg id="sunIcon" style="display: block;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg id="moonIcon" style="display: none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+
+        <a href="https://github.com/CHeShMaC/CHeShMaC.github.io" target="_blank" class="header-btn github-btn" id="githubBtn" title="حمایت در گیت‌هاب">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        </a>
+
+        <h1>چشمک</h1>
+
+        <button class="header-btn lang-toggle-btn" onclick="toggleLang()" id="langBtn" title="تغییر زبان">
+            EN
+        </button>
+    </header>
+
+    <div class="container">
+        
+        <div class="box">
+            <span class="label" id="labelKey">کلید رمزنگاری (حداقل ۵ کاراکتر)</span>
+            <div class="key-wrapper">
+                <input type="text" id="keyInput" class="key-input" placeholder="...کلید را وارد کنید" autocomplete="off">
+                <button class="btn-small" id="btnRandom" onclick="generateRandomKey()">تصادفی</button>
+            </div>
+            <div class="action-bar">
+                <button class="icon-btn" onclick="shareText('keyInput')" title="اشتراک گذاری">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                </button>
+                <button class="icon-btn" onclick="copyText('keyInput')" title="کپی">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="box" style="padding-bottom: 35px;">
+            <span class="label" id="labelPlain">متن ساده (رمزنگاری نشده)</span>
+            <textarea id="plainText" placeholder="متن خود را اینجا بنویسید (پشتیبانی از تمام زبان‌ها و ایموجی‌ها)..." onclick="this.select()"></textarea>
+            <div class="action-bar">
+                <button class="icon-btn" onclick="shareText('plainText')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                </button>
+                <button class="icon-btn" onclick="copyText('plainText')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="convert-actions">
+            <div class="convert-btn-circle" onclick="processConversion()" title="تبدیل">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v12"/><path d="M17 14v-12"/><polyline points="13 6 17 2 21 6"/><polyline points="11 18 7 22 3 18"/></svg>
+            </div>
+        </div>
+
+        <div class="box" style="padding-top: 35px;">
+            <span class="label" id="labelCipher">متن رمزنگاری شده (ایموجی فشرده)</span>
+            <textarea id="cipherText" placeholder="نتیجه اینجا نمایش داده می‌شود..." onclick="this.select()"></textarea>
+            <div class="action-bar">
+                <button class="icon-btn" onclick="shareText('cipherText')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                </button>
+                <button class="icon-btn" onclick="copyText('cipherText')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast">کپی شد!</div>
+
+    <script>
+        // Translations
+        const translations = {
+            fa: {
+                title: "چشمک | رمزنگاری مدرن",
+                labelKey: "کلید رمزنگاری (حداقل ۵ کاراکتر)",
+                phKey: "...کلید را وارد کنید",
+                btnRandom: "تصادفی",
+                labelPlain: "متن ساده (رمزنگاری نشده)",
+                phPlain: "متن خود را اینجا بنویسید (پشتیبانی از تمام زبان‌ها و ایموجی‌ها)...",
+                labelCipher: "متن رمزنگاری شده (ایموجی فشرده)",
+                phCipher: "نتیجه اینجا نمایش داده می‌شود...",
+                toastCopy: "کپی شد!",
+                toastKeyShort: "کلید باید حداقل ۵ کاراکتر باشد.",
+                toastEmpty: "لطفا متنی وارد کنید",
+                toastDecryptErr: "خطا در رمزگشایی",
+                toastInvalidText: "متن معتبری برای رمزگشایی یافت نشد",
+                gitHubTitle: "حمایت در گیت‌هاب",
+                dir: "rtl"
+            },
+            en: {
+                title: "Cheshmak | Modern Cryptography",
+                labelKey: "Encryption Key (Min 5 chars)",
+                phKey: "Enter the key...",
+                btnRandom: "Random",
+                labelPlain: "Plain Text (Unencrypted)",
+                phPlain: "Type your text here (Supports all languages & emojis)...",
+                labelCipher: "Encrypted Text (Compressed Emoji)",
+                phCipher: "Result appears here...",
+                toastCopy: "Copied!",
+                toastKeyShort: "Key must be at least 5 characters.",
+                toastEmpty: "Please enter some text",
+                toastDecryptErr: "Decryption error",
+                toastInvalidText: "No valid text found for decryption",
+                gitHubTitle: "Star on GitHub",
+                dir: "ltr"
+            }
+        };
+
+        let currentLang = 'fa';
+        let currentTheme = 'dark';
+
+        // Elements
+        const keyInput = document.getElementById('keyInput');
+        const plainInput = document.getElementById('plainText');
+        const cipherInput = document.getElementById('cipherText');
+        const toast = document.getElementById('toast');
+        const themeBtn = document.getElementById('themeBtn');
+        const langBtn = document.getElementById('langBtn');
+        const githubBtn = document.getElementById('githubBtn');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+
+        // Highly Compact Dictionary
+        const dictionary = [
+            "😀","😃","😄","😁","😆","😅","🤣","😂","🙂","🙃","😉","😊","😇","🥰","😍","🤩","😘","😗","🥵","🥶","😙","🥲","😋","😛","😜","🤪",
+            "😝","🤑","🤗","🤭","🤫","🤔","🤐","🤨","😐","😑","😶","😏","😒","🙄","😬","🤥","😌","😔","😪","🤤","😴","😷","🤒","🤕","🤢","🤮",
+            "🤧","🧡","💛","💚","💙","💜","🤎","🖤","🤍","💯","💢","💥","💫","💦","💨","🕳️","💣","💬","🥴","😵","🤯","🤠","🥳","😎","🤓","🧐",
+            "😕","😟","🙁","😮","😯","😲","😳","🥺","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤","😡","😠",
+            "🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👻","👽","👾","🤖","😺","😸","😹","😻","😼","😽","🙀","😿","😾","🙈","🙉","🙊","💋",
+            "💌","💘","💝","💖","💗","💓","💞","💕","💟","❣️","💔","🦠","🦷","🦴","👀","👁️","👅","👄","👶","🧒","👦","👧","🧑","👱","👨","🧔",
+            "👋","🤚","🖐️","✋","🖖","👌","🤏","✌️","🤞","🤟","🤘","🤙","👈","👉","👆","👇","🖕","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐",
+            "🤲","🤝","🙏","💅","🤳","💪","🦾","🦿","🦵","🦶","👂","🦻","👃","🧠","🧶","🧵","🧥","🥼","🦺","👚","👕","👖","🩲","🩳","👔","👗",
+            "👙","👘","🥻","🩱","🥿","👠","👡","👢","👞","👟","🥾","🧦","🧤","🧣","🎩","🧢","👒","🎓","⛑️","👑","💍","👝","👛","👜","💼","🎒","🧳",
+            "👓","🕶️","🥽","🌂","🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐽","🐸","🐵","🐔","🐧","🐦","🐤","🐣","🐥",
+            "🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝","🐛","🦋","🐌","🐞","🐜","🦟","🦗","🕷️","🦂","🐢","🐍","🦎","🦖","🦕","🐙","🦑","🦐"
+        ];
+
+        // Reverse Dictionary for Lookup
+        const reverseDictionary = {};
+        dictionary.forEach((word, index) => {
+            reverseDictionary[word] = index;
+        });
+
+        const sortedDict = [...dictionary].sort((a, b) => b.length - a.length);
+        const emojiPattern = sortedDict.map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+        const dictionaryRegex = new RegExp(emojiPattern, 'g');
+
+        function toggleTheme() {
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                currentTheme = 'light';
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                currentTheme = 'dark';
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        function toggleLang() {
+            if (currentLang === 'fa') {
+                currentLang = 'en';
+                langBtn.textContent = 'FA';
+                updateTexts();
+            } else {
+                currentLang = 'fa';
+                langBtn.textContent = 'EN';
+                updateTexts();
+            }
+        }
+
+        function updateTexts() {
+            const t = translations[currentLang];
+            document.documentElement.dir = t.dir;
+            document.getElementById('pageTitle').innerText = t.title;
+            
+            document.getElementById('labelKey').innerText = t.labelKey;
+            document.getElementById('keyInput').placeholder = t.phKey;
+            
+            document.getElementById('btnRandom').innerText = t.btnRandom;
+            
+            document.getElementById('labelPlain').innerText = t.labelPlain;
+            document.getElementById('plainText').placeholder = t.phPlain;
+            
+            document.getElementById('labelCipher').innerText = t.labelCipher;
+            document.getElementById('cipherText').placeholder = t.phCipher;
+
+            // GitHub tooltip translation
+            githubBtn.title = t.gitHubTitle;
+        }
+
+        function generateRandomKey() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+            let result = "";
+            for (let i = 0; i < 10; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            keyInput.value = result;
+        }
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show-toast');
+            setTimeout(() => {
+                toast.classList.remove('show-toast');
+            }, 2000);
+        }
+
+        function copyText(elementId) {
+            const el = document.getElementById(elementId);
+            el.select();
+            el.setSelectionRange(0, 99999); // Mobile
+            navigator.clipboard.writeText(el.value).then(() => {
+                showToast(translations[currentLang].toastCopy);
+            });
+        }
+
+        function shareText(elementId) {
+            const text = document.getElementById(elementId).value;
+            if (!text) return;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Cheshmak',
+                    text: text
+                }).catch(console.error);
+            } else {
+                copyText(elementId); // Fallback
+            }
+        }
+
+        // --- Core Logic ---
+
+        async function compressBytes(data) {
+            try {
+                if (typeof CompressionStream === 'undefined') return null; 
+                const stream = new Blob([data]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+                return new Uint8Array(await new Response(stream).arrayBuffer());
+            } catch (e) { return null; }
+        }
+
+        async function decompressBytes(data) {
+            try {
+                if (typeof DecompressionStream === 'undefined') return null;
+                const stream = new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+                return new Uint8Array(await new Response(stream).arrayBuffer());
+            } catch (e) { return null; }
+        }
+
+        function strToUtf8Bytes(str) {
+            const encoder = new TextEncoder();
+            return encoder.encode(str);
+        }
+
+        function utf8BytesToStr(bytes) {
+            const decoder = new TextDecoder();
+            return decoder.decode(bytes);
+        }
+
+        function getKeyBytes(key) {
+            if (!key || key.length < 5) {
+                showToast(translations[currentLang].toastKeyShort);
+                return null;
+            }
+            return strToUtf8Bytes(key); 
+        }
+
+        async function processConversion() {
+            const pText = plainInput.value.trim();
+            const cText = cipherInput.value.trim();
+            const key = keyInput.value;
+
+            if (key.length < 5) {
+                showToast(translations[currentLang].toastKeyShort);
+                return;
+            }
+
+            if (pText.length > 0) {
+                await encrypt(pText, key);
+            } else if (cText.length > 0) {
+                await decrypt(cText, key);
+            } else {
+                showToast(translations[currentLang].toastEmpty);
+            }
+        }
+
+        async function encrypt(text, key) {
+            const rawBytes = strToUtf8Bytes(text); 
+            const keyBytes = getKeyBytes(key);
+            if(!keyBytes) return;
+
+            let dataToEncrypt;
+            
+            // Try compression
+            const compressed = await compressBytes(rawBytes);
+
+            if (compressed && compressed.length < rawBytes.length) {
+                dataToEncrypt = new Uint8Array(compressed.length + 1);
+                dataToEncrypt[0] = 1; // Flag: Compressed
+                dataToEncrypt.set(compressed, 1);
+            } else {
+                dataToEncrypt = new Uint8Array(rawBytes.length + 1);
+                dataToEncrypt[0] = 0; // Flag: Raw
+                dataToEncrypt.set(rawBytes, 1);
+            }
+
+            let resultWords = [];
+
+            for (let i = 0; i < dataToEncrypt.length; i++) {
+                const byte = dataToEncrypt[i];
+                const keyByte = keyBytes[i % keyBytes.length];
+                const encIndex = (byte + keyByte) % 256;
+                const word = dictionary[encIndex] || "👾"; 
+                resultWords.push(word);
+            }
+
+            cipherInput.value = resultWords.join('');
+        }
+
+        async function decrypt(text, key) {
+            const words = text.match(dictionaryRegex);
+            
+            if (!words || words.length === 0) {
+                showToast(translations[currentLang].toastInvalidText);
+                return;
+            }
+            
+            const keyBytes = getKeyBytes(key);
+            if(!keyBytes) return;
+
+            let decryptedPayload = new Uint8Array(words.length);
+
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i];
+                const idx = reverseDictionary[word];
+
+                if (idx === undefined) {
+                    continue; 
+                }
+
+                const keyByte = keyBytes[i % keyBytes.length];
+
+                let decryptedByte = (idx - keyByte) % 256;
+                if (decryptedByte < 0) decryptedByte += 256;
+
+                decryptedPayload[i] = decryptedByte;
+            }
+
+            try {
+                if (decryptedPayload.length > 0) {
+                    const flag = decryptedPayload[0];
+                    const dataContent = decryptedPayload.slice(1);
+                    
+                    let finalBytes;
+                    if (flag === 1) {
+                        const decompressed = await decompressBytes(dataContent);
+                        if (!decompressed) throw new Error("Decompression failed");
+                        finalBytes = decompressed;
+                    } else {
+                        finalBytes = dataContent;
+                    }
+                    
+                    const resultStr = utf8BytesToStr(finalBytes);
+                    plainInput.value = resultStr;
+                }
+            } catch (e) {
+                console.error(e);
+                showToast(translations[currentLang].toastDecryptErr);
+            }
+        }
+
+        // Clear opposite field on focus
+        plainInput.addEventListener('focus', () => {
+            if(cipherInput.value) cipherInput.value = '';
+        });
+        cipherInput.addEventListener('focus', () => {
+            if(plainInput.value) plainInput.value = '';
+        });
+
+    </script>
+</body>
+</html>
